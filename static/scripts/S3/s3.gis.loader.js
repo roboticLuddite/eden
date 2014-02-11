@@ -437,6 +437,9 @@ var s3_gis_loadjs = function(debug, projection, callback, scripts) {
         }
     } else {
         // Non-Debug
+
+        
+
         if ((projection != 900913) && (projection != 4326)) {
             jsFiles.push('gis/proj4js/lib/proj4js-compressed.js');
             jsFiles.push('gis/proj4js/lib/defs/EPSG' + projection + '.js');
@@ -456,7 +459,7 @@ var s3_gis_loadjs = function(debug, projection, callback, scripts) {
             jsFiles.push('gis/MGRS.min.js');
         }
         if (S3.gis.custom != 'undefined') {
-            jsFiles.push('S3/s3.gis.min.js');
+            jsFiles.push('S3/s3.gis.js');
         }
     }
 

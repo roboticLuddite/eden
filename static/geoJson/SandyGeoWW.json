@@ -1,0 +1,12 @@
+{
+"type": "FeatureCollection",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "Name": "Tropical Storm Warning", "Description": "<table>  <tr><td>Hurricane SANDY (AL182012)<\/td><\/tr>  <tr><td>Advisory #24A issued at 121028\/1200 UTC<\/td><\/tr> " }, "geometry": { "type": "LineString", "coordinates": [ [ -75.650002, 35.450001, 0.0 ], [ -76.349998, 35.099998, 0.0 ], [ -76.470001, 35.18, 0.0 ], [ -75.769997, 35.549999, 0.0 ], [ -75.669998, 35.799999, 0.0 ], [ -75.650002, 35.450001, 0.0 ] ] } },
+{ "type": "Feature", "properties": { "Name": "Tropical Storm Warning", "Description": "<table>  <tr><td>Hurricane SANDY (AL182012)<\/td><\/tr>  <tr><td>Advisory #24A issued at 121028\/1200 UTC<\/td><\/tr> " }, "geometry": { "type": "LineString", "coordinates": [ [ -75.529999, 35.220001, 0.0 ] ] } },
+{ "type": "Feature", "properties": { "Name": "Tropical Storm Warning", "Description": "<table>  <tr><td>Hurricane SANDY (AL182012)<\/td><\/tr>  <tr><td>Advisory #24A issued at 121028\/1200 UTC<\/td><\/tr> " }, "geometry": { "type": "LineString", "coordinates": [ [ -64.949997, 32.200001, 0.0 ], [ -64.580002, 32.43, 0.0 ] ] } },
+{ "type": "Feature", "properties": { "Name": "Tropical Storm Warning", "Description": "<table>  <tr><td>Hurricane SANDY (AL182012)<\/td><\/tr>  <tr><td>Advisory #24A issued at 121028\/1200 UTC<\/td><\/tr> " }, "geometry": { "type": "LineString", "coordinates": [ [ -75.760002, 35.91, 0.0 ], [ -76.510002, 36.009998, 0.0 ], [ -75.910004, 36.119999, 0.0 ], [ -75.760002, 35.91, 0.0 ], [ -75.760002, 35.91, 0.0 ] ] } },
+{ "type": "Feature", "properties": { "Name": "Tropical Storm Warning", "Description": "<table>  <tr><td>Hurricane SANDY (AL182012)<\/td><\/tr>  <tr><td>Advisory #24A issued at 121028\/1200 UTC<\/td><\/tr> " }, "geometry": { "type": "LineString", "coordinates": [ [ -75.529999, 35.77, 0.0 ], [ -75.769997, 36.23, 0.0 ] ] } },
+{ "type": "Feature", "properties": { "Name": "Tropical Storm Warning", "Description": "<table>  <tr><td>Hurricane SANDY (AL182012)<\/td><\/tr>  <tr><td>Advisory #24A issued at 121028\/1200 UTC<\/td><\/tr> " }, "geometry": { "type": "LineString", "coordinates": [ [ -77.959999, 33.84, 0.0 ], [ -77.709999, 34.290001, 0.0 ], [ -77.709999, 34.299999, 0.0 ], [ -77.519997, 34.439999, 0.0 ], [ -77.339996, 34.529999, 0.0 ], [ -77.110001, 34.639999, 0.0 ], [ -76.529999, 34.599998, 0.0 ], [ -76.0, 35.060001, 0.0 ], [ -75.529999, 35.220001, 0.0 ], [ -75.529999, 35.77, 0.0 ] ] } }
+]
+}
