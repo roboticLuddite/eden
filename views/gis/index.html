@@ -1,7 +1,196 @@
 {{extend "layout.html"}}
 <div class='map_home'>
- <a href='{{=URL(f="map_viewing_client")}}' class='gis_fullscreen_map-btn'>{{=T("View Fullscreen Map")}}</a>
- <a href='#' class='gis_print_map-btn'>{{="%s / %s" % (T("Print"), T("Share"))}}</a>
- {{=XML(map)}}
-Paul is king
+    <a href='{{=URL(f="map_viewing_client")}}' class='gis_fullscreen_map-btn'>{{=T("View Fullscreen Map")}}</a>
+    <a href='#' class='gis_print_map-btn'>{{="%s / %s" % (T("Print"), T("Share"))}}</a>    
+    <div id="D_IncidentPanel" class="OutOfCreateMode">
+        <button id="D_CreateIncidentButton" onclick="Deloitte.GIS.Incident.CreateIncidentClicked()">Create Incident</button>
+        <div id="D_CreateIncident_BoundedAssetPanel"></div>
+    </div>
+    {{=XML(map)}}
+
+
+    <script type="text/javascript">
+        var Deloitte = {
+            GIS: {
+                Incident: {
+                    CreateIncidentClicked: function () {
+                        Deloitte.GIS.Incident.MapControl.EnableIncidentAreaSelection();
+
+                        this.CurrentIncident = {
+                            IncidentName: "Unnamed Incident"
+                            , TotalAssetValue: 0
+                            , TotalEmployees: 0
+                            , IncidentAssets: []
+                        };
+
+                        this.BindAssetList();
+
+                        $("#D_IncidentPanel").toggleClass('InCreateMode OutOfCreateMode');
+
+                    }
+                    , CancelIncidentClicked :function(){
+
+                        this.CurrentIncident = {
+                            IncidentName: "Unnamed Incident"
+                             , TotalAssetValue: 0
+                             , TotalEmployees: 0
+                             , IncidentAssets: []
+                        };
+
+                        $("#D_IncidentPanel").toggleClass('InCreateMode OutOfCreateMode');
+
+                        Deloitte.GIS.Incident.MapControl.CancelDrawing();
+
+                    }
+                    , CurrentIncident: {}
+                    , OnNewBoundedAssets: function (assetsAdded) {                                                
+
+                        for(var assetAddedIndex = 0; assetAddedIndex < assetsAdded.length ; assetAddedIndex++){
+                            
+                            if (typeof this.BoundedAssets[assetsAdded[assetAddedIndex].data.id] == "undefined") {
+
+                                this.BoundedAssets[assetsAdded[assetAddedIndex].data.id] = assetsAdded[assetAddedIndex].data;
+
+                                this.CurrentIncident.IncidentAssets.push(assetsAdded[assetAddedIndex].attributes);
+
+                                var rawCommentString = assetsAdded[assetAddedIndex].attributes.comments.replace('|', ',');
+                                var commentObject = jQuery.parseJSON(rawCommentString);
+
+                                this.CurrentIncident.TotalAssetValue = commentObject.OfficeValue + this.CurrentIncident.TotalAssetValue + 0;
+                                this.CurrentIncident.TotalEmployees = commentObject.TotalEmployeeCount + this.CurrentIncident.TotalEmployees + 0;
+                                
+                            }
+                        }
+
+                        this.BindAssetList();
+                    }
+                    , BindAssetList: function () {
+                        
+                        //this.CurrentIncident.IncidentAssets = this.BoundedAssetArray;
+
+                        var currentIncidentTemplate = new Ext.XTemplate(
+                                '<h3>Incident Details</h3>',
+                                '<div class="D_incidentNameWrapper">Name: <input type="text" value="{IncidentName}" /></div>',
+                                '<div class="D_Incident_ModifyAreaButtonPane"><tpl if="IncidentAssets.length != 0" >',
+                                    '<button>Modify Area</button>',
+                                    '<button onclick="Deloitte.GIS.Incident.MapControl.EnableIncidentAreaSelection()">Add Area</button>',
+                                    '<button>Delete Area</button>',
+                                '</tpl></div>',
+                                '<h3>Affected Assets - {[values.IncidentAssets.length]}</h3>',
+                                '<div class="D_GIS_AssetList">',
+                                    '<tpl for="IncidentAssets">',
+                                        '<div>{name}</div>',
+                                    '</tpl>',                                    
+                                '</div>',
+                                '<tpl if="IncidentAssets.length == 0"> <div>Draw an area around affected assets. Double click to complete the shape.</div> </tpl>',
+                                '<h3>Quick Stats</h3>',
+                                '<div>At-Risk Asset Count: <div class="D_StrongText">{[this.FormatWithCommas(values.IncidentAssets.length, 0)]}</div></div>',
+                                '<div>At-Risk Asset Value: <div class="D_StrongText">${[this.FormatWithCommas(values.TotalAssetValue, 0)]}</div></div>',
+                                '<div>At-Risk Employees: <div class="D_StrongText">{[this.FormatWithCommas(values.TotalEmployees, 0)]}</div></div>',
+                                '<h3>Save or Delete</h3>',                                
+                                '<div><button>Save</button> <button onclick="Deloitte.GIS.Incident.CancelIncidentClicked()">Cancel</button></div>'
+                            , {
+
+                               FormatWithCommas: function (number, decimal) {
+                                    return number.formatMoney(decimal);
+                                }
+
+                            });
+
+                        var assetPanel = Ext.get('D_CreateIncident_BoundedAssetPanel');
+
+                        currentIncidentTemplate.overwrite(assetPanel, this.CurrentIncident)
+                    }
+                    , BoundedAssets: {}
+                    , BoundedAssetArray: []
+                }
+            }
+        };
+
+
+        Deloitte.GIS.Incident.MapControl = {
+            Map: null
+            , PolygonLayer: null
+            , PolygonControl: null
+            , FeatureAdded: function(event){
+                
+                var assetLayers = Deloitte.GIS.Incident.MapControl.Map.getLayersByName("Offices");
+
+                var boundedAssets = [];
+
+                function processAsset(vectorClass) {
+
+                    if (event.feature.geometry.containsPoint(vectorClass.geometry)) {
+                        boundedAssets.push(vectorClass);
+                    }
+
+                }
+
+                for (var assetLayerIndex = 0; assetLayerIndex < assetLayers.length; assetLayerIndex++) {
+
+                    for (var featureIndex = 0; featureIndex < assetLayers[assetLayerIndex].features.length; featureIndex++) {
+
+                        if (typeof assetLayers[assetLayerIndex].features[featureIndex].cluster != "undefined") {
+                            // is a cluster
+
+                            for (var clusterIndex = 0; clusterIndex < assetLayers[assetLayerIndex].features[featureIndex].cluster.length ; clusterIndex++) {
+
+                                processAsset(assetLayers[assetLayerIndex].features[featureIndex].cluster[clusterIndex]);
+                            }
+                        } else {
+                            // Is a point
+                            processAsset(assetLayers[assetLayerIndex].features[featureIndex]);
+                        }
+
+                        
+                    }
+                }
+
+                Deloitte.GIS.Incident.OnNewBoundedAssets(boundedAssets);
+                Deloitte.GIS.Incident.MapControl.PolygonControl.deactivate();
+
+            }
+            , EnableIncidentAreaSelection: function () {
+
+                if(this.Map == null){
+                    this.Map = S3.gis.maps.default_map;
+                }
+
+                if (this.PolygonLayer == null) {
+                    this.PolygonLayer = new OpenLayers.Layer.Vector("Unnamed Incident");
+                    this.Map.addLayer(this.PolygonLayer);
+                }
+                if (this.PolygonControl == null) {
+                    this.PolygonControl = new OpenLayers.Control.DrawFeature(this.PolygonLayer, OpenLayers.Handler.Polygon);
+                    this.PolygonControl.events.register('featureadded', this.PolygonControl, this.FeatureAdded)
+
+                    this.Map.addControl(this.PolygonControl);
+                }
+
+                this.PolygonControl.activate();
+            }
+            , CancelDrawing: function () {
+
+                Deloitte.GIS.Incident.MapControl.PolygonControl.destroy();
+                Deloitte.GIS.Incident.MapControl.PolygonLayer.destroy();
+
+                Deloitte.GIS.Incident.MapControl.PolygonControl = null;
+                Deloitte.GIS.Incident.MapControl.PolygonLayer = null;
+
+            }
+            
+        };
+
+
+        Number.prototype.formatMoney = function (c, d, t) {
+            var n = this,
+                c = isNaN(c = Math.abs(c)) ? 2 : c,
+                d = d == undefined ? "." : d,
+                t = t == undefined ? "," : t,
+                s = n < 0 ? "-" : "",
+                i = parseInt(n = Math.abs(+n || 0).toFixed(c)) + "",
+                j = (j = i.length) > 3 ? j % 3 : 0;
+            return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
+        };
+    </script>
 </div>
