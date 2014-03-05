@@ -1,0 +1,59 @@
+﻿/*html, body, .colmask.fullpage, .colmask.fullpage .rightside, .colmask.fullpage .rightside .col1, .colmask.fullpage .rightside .col1 #content {
+    height: 100%;
+}*/
+
+
+#D_IncidentPanel {
+    position: absolute;
+    z-index: 9999;
+    background-color: white;
+    top: 80px;
+    right: 30px;
+    max-width: 265px;
+}
+
+.D_StrongText {
+    font-weight: bold;
+    text-align: right;
+    display: inline;
+    margin-left: auto;
+    font-size: 12pt;
+}
+
+#D_IncidentPanel #D_CreateIncidentButton {
+    width: auto;
+    margin: 0px;
+}
+
+#D_IncidentPanel.OutOfCreateMode #D_CreateIncidentButton {
+    display: inherit;
+}
+
+#D_IncidentPanel.OutOfCreateMode #D_CreateIncident_BoundedAssetPanel {
+    display: none;
+}
+
+
+#D_IncidentPanel.InCreateMode #D_CreateIncidentButton {
+    display: none;
+    padding: 0px;
+}
+
+#D_CreateIncident_BoundedAssetPanel button {
+    width: 40%;
+    padding: 0px;
+    margin: 3px;
+}
+
+.D_incidentNameWrapper {
+    padding-bottom: 5px;
+}
+
+#D_CreateIncident_BoundedAssetPanel > div {
+    padding-left: 5px;
+}
+
+#D_IncidentPanel .D_GIS_AssetList {
+    overflow-y: scroll;
+    max-height: 115px;
+}
