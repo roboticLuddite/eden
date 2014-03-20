@@ -691,7 +691,7 @@ settings.modules = OrderedDict([
         name_nice = T("Map"),
         #description = "Situation Awareness & Geospatial Analysis",
         restricted = True,
-        module_type = 6,     # 6th item in the menu
+        module_type = 1,     # 6th item in the menu
     )),
     ("pr", Storage(
         name_nice = T("Person Registry"),
@@ -704,20 +704,20 @@ settings.modules = OrderedDict([
         name_nice = T("Organizations"),
         #description = 'Lists "who is doing what & where". Allows relief agencies to coordinate their activities',
         restricted = True,
-        module_type = 1
+        module_type = 2
     )),
     # All modules below here should be possible to disable safely
     ("hrm", Storage(
         name_nice = T("Staff"),
         #description = "Human Resources Management",
         restricted = True,
-        module_type = 2,
+        module_type = 10,
     )),
     ("vol", Storage(
         name_nice = T("Volunteers"),
         #description = "Human Resources Management",
         restricted = True,
-        module_type = 2,
+        module_type = 10,
     )),
     ("cms", Storage(
       name_nice = T("Content Management"),
@@ -748,7 +748,7 @@ settings.modules = OrderedDict([
         name_nice = T("Warehouses"),
         #description = "Receiving and Sending Items",
         restricted = True,
-        module_type = 4
+        module_type = 10
     )),
     #("proc", Storage(
     #        name_nice = T("Procurement"),
@@ -760,7 +760,7 @@ settings.modules = OrderedDict([
         name_nice = T("Assets"),
         #description = "Recording and Assigning Assets",
         restricted = True,
-        module_type = 5,
+        module_type = 2,
     )),
     # Vehicle depends on Assets
     ("vehicle", Storage(
@@ -779,13 +779,13 @@ settings.modules = OrderedDict([
         name_nice = T("Projects"),
         #description = "Tracking of Projects, Activities and Tasks",
         restricted = True,
-        module_type = 2
+        module_type = 10
     )),
     ("survey", Storage(
         name_nice = T("Surveys"),
         #description = "Create, enter, and manage surveys.",
         restricted = True,
-        module_type = 5,
+        module_type = 10,
     )),
     ("cr", Storage(
         name_nice = T("Shelters"),
