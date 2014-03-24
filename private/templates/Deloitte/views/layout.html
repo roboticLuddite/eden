@@ -52,7 +52,11 @@
 {{else:}}
 <body>
  <div id='menu_modules'>
-     <!--<span class="hamburgerButton fleft">&#9776;</span>-->
+     <div id="hamburgerButtonWrapper"> 
+         <button class="hamburgerButton fleft" type="button" onclick="$('.aside').toggleClass('active deactive'); $('#hamburgerButtonContent').toggleClass('active deactive'); ">
+             <div id="hamburgerButtonContent">&#9776;</div>
+         </button> 
+     </div>     
   {{=current.menu.main}}
  </div>
  <div class='colmask fullpage'>
